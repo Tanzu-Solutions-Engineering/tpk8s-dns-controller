@@ -1,0 +1,10 @@
+apiVersion: packaging.carvel.dev/v1alpha1
+kind: PackageRepository
+metadata:
+  annotations:
+    kctrl.carvel.dev/repository-version: 1.0.0
+  name: tpk8s-dns-repo.tanzu.field
+spec:
+  fetch:
+    imgpkgBundle:
+      image: ghcr.io/tanzu-solutions-engineering/tpk8s-dns-repo:1.0.0

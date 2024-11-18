@@ -1,0 +1,38 @@
+apiVersion: apps.tanzu.vmware.com/v1
+kind: ContainerApp
+metadata:
+  name: tpk8s-dns-controller
+spec:
+  secretEnv:
+  - name: CSP_TOKEN
+    secretKeyRef:
+      name: tpk8s-dns-controller-secret
+      key: CSP_TOKEN
+  - name: TP_HOST
+    secretKeyRef:
+      name: tpk8s-dns-controller-secret
+      key: TP_HOST
+  - name: PROJECT_ID
+    secretKeyRef:
+      name: tpk8s-dns-controller-secret
+      key: PROJECT_ID
+  - name: SPACES
+    secretKeyRef:
+      name: tpk8s-dns-controller-secret
+      key: SPACES
+  - name: MANAGED_DOMAINS
+    secretKeyRef:
+      name: tpk8s-dns-controller-secret
+      key: MANAGED_DOMAINS
+  - name: DEPLOYMENT_SPACE
+    secretKeyRef:
+      name: tpk8s-dns-controller-secret
+      key: DEPLOYMENT_SPACE
+  contact:
+    team: tanzu-solutions-engineering
+  build:
+    nonSecretEnv:
+      - name: BP_CPYTHON_VERSION
+        value: "3.12.*"
+    buildpacks: {}
+    path: ../../dns-controller/src

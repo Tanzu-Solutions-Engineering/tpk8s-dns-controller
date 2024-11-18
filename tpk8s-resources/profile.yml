@@ -1,0 +1,22 @@
+apiVersion: spaces.tanzu.vmware.com/v1alpha1
+kind: Profile
+metadata:
+  name: dns-controller-profile
+spec:
+  requiredCapabilities:
+  - name: externaldns.k8s.io
+  - name: ingress.tanzu.vmware.com
+  - name: egress.tanzu.vmware.com
+  - name: container-app.tanzu.vmware.com
+  - name: observability.tanzu.vmware.com
+  - name: k8sgateway.tanzu.vmware.com
+  - name: servicemesh-observability.tanzu.vmware.com
+  - name: package-management.tanzu.vmware.com
+  - name: health.spaces.tanzu.vmware.com
+  traits:
+  - alias: carvel-package-installer.tanzu.vmware.com
+    name: carvel-package-installer.tanzu.vmware.com
+    values:
+      inline:
+        carvel-package-installer:
+          serviceAccountName: carvel-package-installer

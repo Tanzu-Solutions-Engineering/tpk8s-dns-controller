@@ -1,0 +1,9 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: PackageMetadata
+metadata:
+  creationTimestamp: null
+  name: externaldns.tanzu.field
+spec:
+  displayName: externaldns
+  longDescription: externaldns.tanzu.field
+  shortDescription: externaldns.tanzu.field

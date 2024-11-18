@@ -1,0 +1,18 @@
+apiVersion: spaces.tanzu.vmware.com/v1alpha1
+kind: Space
+metadata:
+  name: tpk8s-dns-controller-space
+spec:
+  availabilityTargets:
+  - name: warroyo-eks
+    replicas: 1
+  revisionHistoryLimit: 10
+  template:
+    spec:
+      profiles:
+      - name:  dns-controller-profile
+        values:
+          inline: null
+      resources: {}
+  updateStrategy:
+    type: RollingUpdate

@@ -1,0 +1,66 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: Package
+metadata:
+  creationTimestamp: null
+  name: externaldns.tanzu.field.0.0.0
+  annotations:
+    capability.tanzu.vmware.com/provides: |-
+        [{
+          "name": "externaldns.k8s.io",
+          "displayName": "External DNS",
+          "description": "used for BYO GSLB in combination with the tpk8s-dns controller",
+          "vendor": "External DNS Bitnami",
+          "tags": [ "DNS" ],
+          "groupVersionKinds": [
+            { "apiVersion": "externaldns.k8s.io/v1alpha1", "kind": "DNSEndpoint" }
+          ]
+        }]
+spec:
+  refName: externaldns.tanzu.field
+  releasedAt: null
+  template:
+    spec:
+      deploy:
+      - kapp: {}
+      fetch:
+      - git: {}
+      template:
+      - helmTemplate:
+          path: upstream
+      - ytt:
+          paths:
+          - '-'
+      - kbld: {}
+  valuesSchema:
+    openAPIv3: null
+  version: 0.0.0
+
+---
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: PackageMetadata
+metadata:
+  creationTimestamp: null
+  name: externaldns.tanzu.field
+spec:
+  displayName: externaldns
+  longDescription: externaldns.tanzu.field
+  shortDescription: externaldns.tanzu.field
+
+---
+apiVersion: packaging.carvel.dev/v1alpha1
+kind: PackageInstall
+metadata:
+  annotations:
+    kctrl.carvel.dev/local-fetch-0: .
+  creationTimestamp: null
+  name: externaldns
+spec:
+  packageRef:
+    refName: externaldns.tanzu.field
+    versionSelection:
+      constraints: 0.0.0
+  serviceAccountName: externaldns-sa
+status:
+  conditions: null
+  friendlyDescription: ""
+  observedGeneration: 0

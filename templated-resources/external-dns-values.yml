@@ -1,0 +1,38 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:yaml", "yaml")
+
+#@ def config():
+---
+sources:
+  - crd
+provider: azure
+namespaceOverride: external-dns
+azure:
+  tenantId: #@ data.values.tenantId
+  subscriptionId: #@ data.values.subscriptionId
+  aadClientId: #@ data.values.clientId
+  aadClientSecret: #@ data.values.clientSecret
+  resourceGroup: #@ data.values.resourceGroup
+pdb:
+  create: false
+extraDeploy:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: external-dns
+crd:
+  create: true
+policy: sync
+txtPrefix: #@ data.values.clusterGroup
+txtOwnerId: #@ data.values.clusterGroup
+#@ end
+
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: external-dns-values
+  namespace: default
+stringData:
+  values.yml: #@ yaml.encode(config())

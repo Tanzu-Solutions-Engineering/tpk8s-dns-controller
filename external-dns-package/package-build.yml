@@ -1,0 +1,27 @@
+apiVersion: kctrl.carvel.dev/v1alpha1
+kind: PackageBuild
+metadata:
+  creationTimestamp: null
+  name: externaldns.tanzu.field
+spec:
+  release:
+  - resource: {}
+  template:
+    spec:
+      app:
+        spec:
+          deploy:
+          - kapp: {}
+          template:
+          - helmTemplate:
+              path: upstream
+          - ytt:
+              paths:
+              - '-'
+          - kbld: {}
+      export:
+      - imgpkgBundle:
+          image: ghcr.io/tanzu-solutions-engineering/external-dns-capability
+          useKbldImagesLock: true
+        includePaths:
+        - upstream

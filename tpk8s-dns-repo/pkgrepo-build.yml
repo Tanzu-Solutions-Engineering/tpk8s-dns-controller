@@ -1,0 +1,9 @@
+apiVersion: kctrl.carvel.dev/v1alpha1
+kind: PackageRepositoryBuild
+metadata:
+  creationTimestamp: "2024-11-14T22:08:30Z"
+  name: tpk8s-dns-repo.tanzu.field
+spec:
+  export:
+    imgpkgBundle:
+      image: ghcr.io/tanzu-solutions-engineering/tpk8s-dns-repo
