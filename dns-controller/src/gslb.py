@@ -213,7 +213,7 @@ def run():
         print(current_records)
         for entry in current_records["items"]:
             if entry["metadata"]["name"] not in desiredServices:
-                logger.info(f"deleteing {entry["metadata"]["name"]}")
+                logger.info(f"deleting {entry["metadata"]["name"]}")
                 delDnsEndpoints(ucpClient,entry["metadata"]["name"])                
     except Exception as ex:
             raise Exception('%s' % (ex))

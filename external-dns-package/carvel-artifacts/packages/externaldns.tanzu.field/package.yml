@@ -6,7 +6,7 @@ metadata:
       [{
         "name": "externaldns.k8s.io",
         "displayName": "External DNS",
-        "description": "",
+        "description": "the external",
         "vendor": "External DNS Bitnami",
         "tags": [ "DNS" ],
         "groupVersionKinds": [

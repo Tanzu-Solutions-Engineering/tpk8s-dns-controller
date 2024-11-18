@@ -1,0 +1,17 @@
+apiVersion: networking.tanzu.vmware.com/v1alpha1
+kind: EgressPoint
+metadata:
+  name: platform
+  namespace: default
+spec:
+  targets:
+  - hosts:
+    - console.tanzu.broadcom.com
+    port:
+      number: 443
+      protocol: TLS
+  - hosts:
+    - api.tanzu.cloud.vmware.com
+    port:
+      number: 443
+      protocol: TLS

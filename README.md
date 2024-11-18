@@ -7,7 +7,7 @@ This repo provides a way to add support for many different DNS providers to Tanz
 
 ## Setup the custom capability
 
-** IMPORTANT: this is only meant to be used in a space with 1 replica and with a cluster group that only has 1 cluster, see more details in the FAQ**
+**IMPORTANT: this is only meant to be used in a space with 1 replica and with a cluster group that only has 1 cluster, see more details in the FAQ**
 
 Due to limitations in TPK8s today in order to add a custom package repo that contains custom capabilties a workaround is needed. These instructions outline that workaround. This workaround is only done once by the platform engineer, once the repo is added everything can be done through TPK8S normally. This will need to be done per cluster group.This workaround will allow for the pkgr to automatcally be installed on the clustergroup, this works around the lack of package repo syncing today and prevents the user from having to manually create pkgrs on indiviual clusters. The workaround does the following:
 
@@ -87,7 +87,12 @@ tanzu project use <your-project>
 export KUBECONFIG=~/.config/tanzu/kube/config
 k apply -f tpk8s-resources/space.yml
 ```
-
+3. add egress
+```bash
+tanzu space use your-space
+export KUBECONFIG=~/.config/tanzu/kube/config
+k apply -f tpk8s-resources/egress.yml
+```
 
 
 ## Deploying in Tanzu Platform for K8s
