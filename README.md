@@ -3,6 +3,11 @@
 This repo provides a way to add support for many different DNS providers to Tanzu Platform. This is not a Tanzu officially supported method, it falls under the "bring your own DNS provider" category. 
 
 
+
+# How it works
+
+This is a wrapper around the OSS project [external-dns](https://github.com/kubernetes-sigs/external-dns/). This allows for DNS(GSLB) entries to be created using any of the external DNS providers using domain bindings as a source. This works by deploying external-dns as a capabilty and configuring it for whichever provider is required, in the config it is also set to only watch CRDs this means it will not watch services, ingress etc. the second component of this is a controller that runs in a space and requires the external-dns capability. this controller watches spaces for domain bindings and creates the `DnsEndpoint` CRs in the space based on those domain bindings. Those CRs are then watched by external-dns and it handles creating/updating/deleting the entries in the provider.
+
 # Setup
 
 ## Setup the custom capability
