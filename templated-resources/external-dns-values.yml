@@ -5,14 +5,10 @@
 ---
 sources:
   - crd
-provider: azure
+provider: #@ data.values.provider
 namespaceOverride: external-dns
-azure:
-  tenantId: #@ data.values.tenantId
-  subscriptionId: #@ data.values.subscriptionId
-  aadClientId: #@ data.values.clientId
-  aadClientSecret: #@ data.values.clientSecret
-  resourceGroup: #@ data.values.resourceGroup
+#@yaml/text-templated-strings
+(@= data.values.provider @): #@ data.values.providerSettings
 pdb:
   create: false
 extraDeploy:

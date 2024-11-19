@@ -1,6 +1,9 @@
-tenantId: 
-subscriptionId:
+# replace provider and provider settings with details from https://github.com/bitnami/charts/blob/main/bitnami/external-dns/values.yaml
+provider: azure
+providerSettings:
+  tenantId: 
+  subscriptionId:
+  aadClientId:
+  aadClientSecret:
+  resourcegroup:
 clusterGroup:
-clientId:
-clientSecret:
-resourcegroup:

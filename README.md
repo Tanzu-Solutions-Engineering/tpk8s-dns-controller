@@ -52,7 +52,7 @@ kubectl apply -f tpk8s-resources/tpk8s-dns-repo.yml
 
 in this example we will use azure. full steps found [here](https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/azure.md#service-principal)
 
-copy the values-example.yml to capability-values.yml and update the contents. then run the below command
+copy the values-example.yml to capability-values.yml and update the contents. This values file is made to allow any fo the supported providers in the format shown [here](https://github.com/bitnami/charts/blob/main/bitnami/external-dns/values.yaml) and [here](https://github.com/bitnami/charts/blob/main/bitnami/external-dns/values.yaml#L302) with azure as the exmaple.then run the below command
 
 ```bash
 tanzu ops clustergroup use <your-cg>
