@@ -114,7 +114,7 @@ tanzu space use tpk8s-dns-controller-space
 ```
 2. copy the `templated-resources/secret-example.yml` into the `.tanzu/config` directory and rename it `secret.yml`
 3. Update all of the values in the `secret.yml` 
-4. `tanzu deploy --from-build build-output`
+4. `tanzu deploy`
 
 ### Validating it works
 
