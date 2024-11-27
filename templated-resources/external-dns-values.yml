@@ -11,11 +11,13 @@ namespaceOverride: external-dns
 (@= data.values.provider @): #@ data.values.providerSettings
 pdb:
   create: false
+#@ if not data.values.helm:
 extraDeploy:
 - apiVersion: v1
   kind: Namespace
   metadata:
     name: external-dns
+#@ end
 crd:
   create: true
 policy: sync

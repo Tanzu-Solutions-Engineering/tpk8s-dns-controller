@@ -6,4 +6,5 @@ providerSettings:
   aadClientId:
   aadClientSecret:
   resourcegroup:
-clusterGroup:
+clusterGroup: # if running in tpsm or off platform this can be anything but should be unique
+helm: false

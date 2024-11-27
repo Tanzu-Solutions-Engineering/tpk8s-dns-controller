@@ -1,4 +1,7 @@
 azure.json
+sm1.conf
+helm-values.yml
+build-ouput
 eks2.conf
 capability-values.yml
 deploy/values.yml

@@ -69,7 +69,6 @@ This can be done through the UI or the api. The steps below use the cli/api so t
 ```bash
 tanzu ops clustergroup use <your-cg>
 export KUBECONFIG=~/.config/tanzu/kube/config
-k apply -f tpk8s-resources/external-dns-values.yml
 k apply -f tpk8s-resources/dns-capability.yml
 ```
 
@@ -119,6 +118,33 @@ tanzu space use tpk8s-dns-controller-space
 ### Validating it works
 
 you can check the logs on the controller pod in the cluster to make sure it is working along with the external-dns logs.
+
+# Deploying on Tanuz Platform Self Managed
+
+When running self managed this can be deployed in the self managed control plane cluster. If this approach is not preferred the other approach can still be used with TPSM. This approach could also be used for a generic install on a non managed cluster.
+
+## Install External DNS
+
+all of the steps below should be run against the TPSM cluster 
+
+### create the values file
+
+copy the values-example.yml to capability-values.yml and update the contents. This values file is made to allow any fo the supported providers in the format shown [here](https://github.com/bitnami/charts/blob/main/bitnami/external-dns/values.yaml) and [here](https://github.com/bitnami/charts/blob/main/bitnami/external-dns/values.yaml#L302) with azure as the exmaple.then run the below command
+
+```bash
+ytt -f templated-resources/external-dns-values.yml --data-values-file capability-values.yml | yq '.stringData.["values.yml"]' > helm-values.yml
+
+```
+### Install the helm chart
+
+```bash
+k create ns external-dns
+helm install external-dns oci://registry-1.docker.io/bitnamicharts/external-dns -f helm-values.yml -n external-dns
+```
+
+## Install the dns controller
+
+
 
 # FAQ
 
