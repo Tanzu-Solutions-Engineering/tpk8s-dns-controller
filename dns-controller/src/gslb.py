@@ -6,6 +6,7 @@ import logging
 import requests
 import json
 import time
+import base64
 from apscheduler.schedulers.blocking import BlockingScheduler
 from kubernetes import client, config,utils,dynamic
 from kubernetes.client.rest import ApiException
@@ -101,18 +102,51 @@ def get_domain_bindings(space,ucpClient):
         raise
 
 
-def getAccessToken(csp_host,csp_token):
-    try:
-        response = requests.post('https://%s/csp/gateway/am/api/auth/api-tokens/authorize?refresh_token=%s' % (csp_host,csp_token))
-        response.raise_for_status()
-    except Exception as e:
-        logging.error(e)
-        return None
-    else:
-        access_token = response.json()['access_token']
-        expires_in = response.json()['expires_in']
-        expire_time = time.time() + expires_in
-        return access_token, expire_time
+def getAccessToken(csp_host,csp_token,tp_host,tpsm):
+
+    if tpsm:
+        logging.info("tpsm detected using UAA auth")
+        client = "tp_cli_app"
+        client_secret = "tanzu_intentionally_not_a_secret"
+        authcode_bytes = base64.b64encode(f"{client}:{client_secret}".encode('utf-8'))
+        authcode = authcode_bytes.decode('utf-8')
+        headers = {
+            "Authorization":f"Basic {authcode}",
+            "Content-Type":"application/x-www-form-urlencoded",
+            "x-cf-encoded-credentials": "true"
+        }
+        payload = {
+            'client_id': client,
+            'grant_type': 'password',
+            'password': password,
+            'username': username
+        } 
+        expire_time = -1
+        try:
+            response = requests.post(f"{tp_host}/auth/oauth/token", data=payload, headers=headers,verify=False)
+            response.raise_for_status()
+        except Exception as except_ce:
+            logging.error(except_ce)
+            return None
+        else:
+            access_token = response.json()["access_token"]
+
+            expires_in = response.json()["expires_in"]
+            expire_time = time.time() + expires_in
+            return access_token,expire_time
+
+    else:    
+        try:
+            response = requests.post('https://%s/csp/gateway/am/api/auth/api-tokens/authorize?refresh_token=%s' % (csp_host,csp_token))
+            response.raise_for_status()
+        except Exception as e:
+            logging.error(e)
+            return None
+        else:
+            access_token = response.json()['access_token']
+            expires_in = response.json()['expires_in']
+            expire_time = time.time() + expires_in
+            return access_token, expire_time
 
 
 def set_global_token():
@@ -121,7 +155,7 @@ def set_global_token():
     global access_token
     if time.time() > access_token_expiration:
         logger.info("udpating refresh token")
-        access_token, access_token_expiration =  getAccessToken(csp_host,csp_token)
+        access_token, access_token_expiration =  getAccessToken(csp_host,csp_token,tp_host,tpsm)
 
 def get_global_token():
     return access_token
@@ -227,6 +261,14 @@ if __name__ == '__main__':
                         help='FQDN or IP address of the Tanzu Platform API,including the scheme',default=os.environ.get('TP_HOST'))
     parser.add_argument('--spaces',
                         help='comma separated list of spaces to watch',default=os.environ.get('SPACES'))
+    parser.add_argument('--tpsm',
+                        help='whether or not you are running self manage(true or false)',default=os.environ.get('TPSM'))
+    parser.add_argument('--tpsmuser',
+                        help='username for tspm, this should be an admin user',default=os.environ.get('TPSM_USER'))
+    parser.add_argument('--tpsmpass',
+                        help='password for tpsm user',default=os.environ.get('TPSM_PASS'))
+    parser.add_argument('--orgid',
+                        help='org id',default=os.environ.get('ORG_ID'))
     parser.add_argument('--projectid',
                         help='id of the project to use',default=os.environ.get('PROJECT_ID'))
     parser.add_argument('--manageddomains',help='comma separated list of domains that should be managed',default=os.environ.get('MANAGED_DOMAINS'))
@@ -246,8 +288,12 @@ if __name__ == '__main__':
         csp_token = None
         csp_host = None
         tp_host = args.tphost
+        tpsm = args.tpsm
+        username = args.tpsmuser
+        password = args.tpsmpass
         spaces_list = args.spaces
         project_id = args.projectid
+        org_id = args.orgid
         project_name = args.project
         managed_domains = args.manageddomains.split(",")
         spaces = spaces_list.split(",")
@@ -257,16 +303,13 @@ if __name__ == '__main__':
         
         try:
             logging.info("getting initial token")
-            access_token, access_token_expiration = getAccessToken(csp_host,csp_token)
+            access_token, access_token_expiration = getAccessToken(csp_host,csp_token,tp_host,tpsm)
             if access_token is None:
                 raise Exception("Request for access token failed.")
         except Exception as e:
             logging.error(e)
         else:
             logging.info("access token recieved")
-
-        decoded = jwt.decode(access_token, options={"verify_signature": False})
-        org_id = decoded['context_name']
         
         gslb_sched.add_job(id='run gslb job',func=run,trigger='interval',seconds=10)
         gslb_sched.start()

@@ -4,10 +4,6 @@ metadata:
   name: tpk8s-dns-controller
 spec:
   secretEnv:
-  - name: CSP_TOKEN
-    secretKeyRef:
-      name: tpk8s-dns-controller-secret
-      key: CSP_TOKEN
   - name: TP_HOST
     secretKeyRef:
       name: tpk8s-dns-controller-secret
@@ -28,6 +24,22 @@ spec:
     secretKeyRef:
       name: tpk8s-dns-controller-secret
       key: DEPLOYMENT_SPACE
+  - name: ORG_ID
+    secretKeyRef:
+      name: tpk8s-dns-controller-secret
+      key: ORG_ID
+  - name: TPSM
+    secretKeyRef:
+      name: tpk8s-dns-controller-secret
+      key: TPSM
+  - name: TPSM_USER
+    secretKeyRef:
+      name: tpk8s-dns-controller-secret
+      key: TPSM_USER
+  - name: TPSM_PASS
+    secretKeyRef:
+      name: tpk8s-dns-controller-secret
+      key: TPSM_PASS
   contact:
     team: tanzu-solutions-engineering
   build:

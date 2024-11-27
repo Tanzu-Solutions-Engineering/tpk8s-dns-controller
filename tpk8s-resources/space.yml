@@ -4,7 +4,7 @@ metadata:
   name: tpk8s-dns-controller-space
 spec:
   availabilityTargets:
-  - name: warroyo-eks
+  - name: all-regions.tanzu.vmware.com
     replicas: 1
   revisionHistoryLimit: 10
   template:

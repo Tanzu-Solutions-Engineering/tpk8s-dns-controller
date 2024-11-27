@@ -6,6 +6,7 @@ eks2.conf
 capability-values.yml
 deploy/values.yml
 .tanzu/config/secret.yml
+controller-deploy/secret.yml
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

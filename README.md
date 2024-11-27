@@ -91,8 +91,7 @@ tanzu project use <your-project>
 export KUBECONFIG=~/.config/tanzu/kube/config
 k apply -f tpk8s-resources/space.yml
 ```
-3. add egress
-```bash
+3. add egress, be sure to update this if you are using tpsm
 tanzu space use your-space
 export KUBECONFIG=~/.config/tanzu/kube/config
 k apply -f tpk8s-resources/egress.yml
@@ -105,6 +104,7 @@ This section outline how to deploy this as a part of a space in the platform. Th
 
 ###  Deploy the controller to a space
 
+If you are running TPSM be sure to update the TPSM specific field and remove the saas ones from the secret.
 
 1. connect to your project and the space that was previsouly created
 ```bash
@@ -119,7 +119,7 @@ tanzu space use tpk8s-dns-controller-space
 
 you can check the logs on the controller pod in the cluster to make sure it is working along with the external-dns logs.
 
-# Deploying on Tanuz Platform Self Managed
+# Deploying on Tanzu Platform Self Managed Cluster[WIP do not use]
 
 When running self managed this can be deployed in the self managed control plane cluster. If this approach is not preferred the other approach can still be used with TPSM. This approach could also be used for a generic install on a non managed cluster.
 
@@ -144,7 +144,14 @@ helm install external-dns oci://registry-1.docker.io/bitnamicharts/external-dns 
 
 ## Install the dns controller
 
+unlike the on platform install, this install will simply use a k8s deployment to run the app. 
 
+1. copy the `templated-resources/secret-example.yml` into the `controller-deploy` directory and rename it `secret.yml`
+2. Update all of the values in the `secret.yml` 
+3. deploy the app
+
+```bash
+```
 
 # FAQ
 
