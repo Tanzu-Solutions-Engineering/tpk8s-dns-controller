@@ -92,6 +92,8 @@ export KUBECONFIG=~/.config/tanzu/kube/config
 k apply -f tpk8s-resources/space.yml
 ```
 3. add egress, be sure to update this if you are using tpsm
+
+```bash
 tanzu space use your-space
 export KUBECONFIG=~/.config/tanzu/kube/config
 k apply -f tpk8s-resources/egress.yml
