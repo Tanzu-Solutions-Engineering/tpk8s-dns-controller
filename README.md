@@ -16,14 +16,14 @@ This is a wrapper around the OSS project [external-dns](https://github.com/kuber
 
 Due to limitations in TPK8s today in order to add a custom package repo that contains custom capabilties a workaround is needed. These instructions outline that workaround. This workaround is only done once by the platform engineer, once the repo is added everything can be done through TPK8S normally. This will need to be done per cluster group.This workaround will allow for the pkgr to automatcally be installed on the clustergroup, this works around the lack of package repo syncing today and prevents the user from having to manually create pkgrs on indiviual clusters. The workaround does the following:
 
-* adds the package repo and secret to TPK8s project
-* adds the package repo and secret to the tpk8s cluster group
+* adds the package repo to the TPK8s project
+* adds the package repo and to the tpk8s cluster group
 
 ### Configure the tpk8s project with the custom repo
 
 This sets up the the project to have access to the custom pkgr so that it will show up in the UI when looking for capabilties
 
-1. add the package repo and secret to the project
+1. add the package repo to the project
 ```bash
 tanzu project use <your-proj>
 export KUBECONFIG=~/.config/tanzu/kube/config
@@ -33,11 +33,11 @@ kubectl apply -f tpk8s-resources/tpk8s-dns-repo.yml
 
 ### Configure the cluster group with the pkgr
 
-This is needed becuase we need the cluster group to have access to to the pkgr. becuase the pkgr is private we need to sync a secret out to the unerlying clusters.
+This is needed becuase we need the cluster group to have access to to the pkgr.
 
 ** make sure you cluster group only contains 1 cluster**
 
-1. add pkgr and secret to the cluster group
+1. add pkgr to the cluster group
 
 ```bash
 tanzu ops clustergroup use <your-cg>
