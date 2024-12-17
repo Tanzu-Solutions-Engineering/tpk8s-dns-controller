@@ -48,7 +48,7 @@ kubectl apply -f tpk8s-resources/tpk8s-dns-repo.yml
 
 ## Deploy the capability
 
-### template the values file with the secret details
+### Template the values file with the secret details
 
 in this example we will use azure. full steps found [here](https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/azure.md#service-principal)
 
@@ -57,7 +57,7 @@ copy the values-example.yml to capability-values.yml and update the contents. Th
 ```bash
 tanzu ops clustergroup use <your-cg>
 export KUBECONFIG=~/.config/tanzu/kube/config
- ytt -f templated-resources/external-dns-values.yml --data-values-file capability-values.yml  | kubectl apply -f- 
+ytt -f templated-resources/external-dns-values.yml --data-values-file capability-values.yml  | kubectl apply -f- 
 ```
 
 ### Deploying the Capability
@@ -99,14 +99,7 @@ export KUBECONFIG=~/.config/tanzu/kube/config
 k apply -f tpk8s-resources/egress.yml
 ```
 
-
-## Deploying in Tanzu Platform for K8s
-
-This section outline how to deploy this as a part of a space in the platform. This is the recommended approach for running this.
-
-###  Deploy the controller to a space
-
-If you are running TPSM be sure to update the TPSM specific field and remove the saas ones from the secret.
+###  Deploy the controller to the space
 
 1. connect to your project and the space that was previsouly created
 ```bash
@@ -114,12 +107,12 @@ tanzu project use <project>
 tanzu space use tpk8s-dns-controller-space
 ```
 2. copy the `templated-resources/secret-example.yml` into the `.tanzu/config` directory and rename it `secret.yml`
-3. Update all of the values in the `secret.yml` 
+3. Update all of the values in the `secret.yml`. If you are running TPSM be sure to update the TPSM specific field and remove the saas ones from the secret. 
 4. `tanzu deploy`
 
 ### Validating it works
 
-you can check the logs on the controller pod in the cluster to make sure it is working along with the external-dns logs.
+You can check the logs on the controller pod in the cluster to make sure it is working along with the external-dns logs.
 
 # Deploying on Tanzu Platform Self Managed Cluster[WIP do not use]
 
