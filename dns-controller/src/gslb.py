@@ -33,6 +33,26 @@ if hasattr(requests.packages.urllib3, 'disable_warnings'):
 if hasattr(urllib3, 'disable_warnings'):
     urllib3.disable_warnings()
 
+def getSpaces(ucpClient):
+    api = client.CustomObjectsApi(ucpClient)
+    try:
+        matched_spaces =[]
+        ucp_spaces = api.list_namespaced_custom_object(group="spaces.tanzu.vmware.com", version="v1alpha1",plural="spaces",namespace="default")
+        for space in ucp_spaces["items"]:
+            name = space['metadata']['name']
+            if "status" in space:
+                if not any(cap["name"] == "ingress.tanzu.vmware.com" for cap in space["status"]["providedCapabilities"] ):
+                    logging.info(f"space {name} does not have ingress capability, skipping")
+                    continue
+                for condition in space["status"]["conditions"]:
+                    if condition["type"] == "Ready" and condition["status"]:
+                        matched_spaces.append(name)  
+        return matched_spaces
+
+    except ApiException as e:
+        logging.error(f"failed to get domainbinding data for {space}")
+        raise
+
 def is_valid_ip(address):
     try:
         ipaddress.ip_address(address)
@@ -175,7 +195,11 @@ def run():
     ucpConfig.api_key = {"authorization": "Bearer " + access_token}
     ucpClient = client.ApiClient(ucpConfig)
     project_bindings = []
-    for space in spaces:
+    if "*" in spaces:
+        monit_spaces = getSpaces(ucpClient)
+    else:
+        monit_spaces = spaces
+    for space in monit_spaces:
         ucpClient.configuration.host = f"{tp_host}/org/{org_id}/project/{project_id}"
         logger.info(f"generating space gslb data for {space}")
         
